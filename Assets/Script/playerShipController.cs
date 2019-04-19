@@ -1,22 +1,31 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 
-public class playerShip : MonoBehaviour{
+public class playerShipController : MonoBehaviour{
 
+    [Header("General")]
     [Tooltip("m/deltatime")][SerializeField] float Speed = 4f;
-    [SerializeField] float xRange = 2f;
+    [SerializeField] float xRange = 4f;
     [SerializeField] float yRange = 2f;
 
+    [Header("Screen Postion")]
     [SerializeField] float posPitchFactor = -5f;
-    [SerializeField] float posYawFactor = -5f;
+    [SerializeField] float posYawFactor = 10f;
+
+    [Header("Controll Throw")]
     [SerializeField] float controllPitchFactor = -10f;
     [SerializeField] float controllYawFactor = -10f;
+
+    [Header("Gun Controll")]
+    [SerializeField] GameObject[] guns;
 
     // the intensity we press the bottom
     float hz, vt;
     float initx, inity;
+    bool enableControl = true;
 
     // Start is called before the first frame update
     void Start()
@@ -27,9 +36,29 @@ public class playerShip : MonoBehaviour{
 
     // Update is called once per frame
     void Update() {
-        posControll();
-        rotationControll();
+        if (enableControl) {
+            posControll();
+            rotationControll();
+            proccesFire();
+        }
     }
+
+    private void proccesFire() {
+        if (CrossPlatformInputManager.GetButton("Fire1")) {
+            foreach (GameObject gun in guns) gun.SetActive(true);
+        }
+        else {
+            foreach (GameObject gun in guns) gun.SetActive(false);
+        }
+    }
+
+    //private void OnCollisionEnter(Collision collision) {
+    //    print("Collide!!!!!!!!!!");
+    //}
+
+    //private void OnTriggerEnter(Collider other) {
+    //    print("Triggerrrrrrrrrrrrrrrrrrrr!");
+    //}
 
     private void rotationControll() {
         // right hand rule x y z
@@ -53,5 +82,10 @@ public class playerShip : MonoBehaviour{
 
         // change the relative position of the ship
         transform.localPosition = new Vector3(newXpos, newYpos, transform.localPosition.z);
+    }
+
+    void die() {
+        print("YOU DIE!!");
+        enableControl = false;
     }
 }
