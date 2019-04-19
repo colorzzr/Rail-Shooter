@@ -1,2 +1,6 @@
 # Rail-Shooter
-Unity Learning Project
+This is Unity Learning Project
+
+here is image presenting:
+
+![alt text](Rail Shooter.png)
